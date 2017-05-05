@@ -1,5 +1,6 @@
 package de.rwth.i9.cimt.nlp.opennlp;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.rwth.i9.cimt.nlp.NLP;
@@ -41,4 +42,13 @@ public interface OpenNLP extends NLP {
 	 */
 	public Parse parseSentence(final String text);
 
+	/**
+	 * returns lemma of word based on a dictionary
+	 * 
+	 * @param word
+	 * @param postag
+	 * @return
+	 * @throws IOException
+	 */
+	public String lemmatize(String word, String postag) throws IOException;
 }

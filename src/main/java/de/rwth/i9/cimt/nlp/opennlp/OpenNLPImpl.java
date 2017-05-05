@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
+import opennlp.tools.lemmatizer.SimpleLemmatizer;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinder;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -70,6 +71,8 @@ public class OpenNLPImpl implements OpenNLP {
 	@Value("${opennlp.chunker}")
 	private String openNLPChunker;
 
+	@Value("${opennlp.chunker}")
+	private String openNLPLemmatizer;
 	// the named entities
 	private static final String[] NAME_TYPES = { "person", "organization", "location" };
 
@@ -79,6 +82,7 @@ public class OpenNLPImpl implements OpenNLP {
 	private POSTagger posTagger = null;
 	final private Map<String, TokenNameFinder> nameFinderMap = new HashMap<String, TokenNameFinder>();
 	private Parser parser = null;
+	private static SimpleLemmatizer lemmatizer;
 
 	public String[] detectSentences(final File file, final Charset cs) throws IOException {
 		final List<String> lines = FileUtils.readLines(file, cs.toString());
@@ -395,6 +399,16 @@ public class OpenNLPImpl implements OpenNLP {
 		}
 
 		return model;
+	}
+
+	public String lemmatize(String word, String postag) throws IOException {
+		if (lemmatizer == null) {
+			InputStream is = getClass().getResourceAsStream(openNLPLemmatizer);
+			lemmatizer = new SimpleLemmatizer(is);
+			is.close();
+		}
+		String lemma = lemmatizer.lemmatize(word, postag);
+		return lemma;
 	}
 
 }

@@ -14,6 +14,7 @@ public class OpenNlpModelManager {
 	private static final String EN_PARSER_MODEL = MODEL_PATH + "en-parser-chunking.bin";
 	private static final String EN_POSTAG_MODEL = MODEL_PATH + "en-pos-maxent.bin";
 	private static final String EN_TOKENIZER_MODEL = MODEL_PATH + "en-token.bin";
+	private static final String EN_LEMMATIZER_DICT = MODEL_PATH + "en-lemmatizer.dict";
 
 	private static final String DE_CHUNKER_MODEL = MODEL_PATH + "en-chunker.bin";
 	private static final String DE_SENTDEC_MODEL = MODEL_PATH + "en-sent.bin";
@@ -36,9 +37,17 @@ public class OpenNlpModelManager {
 
 	private static SimpleLemmatizer lemmatizer;
 
+	/**
+	 * returns lemma of a word based on dictionary
+	 * 
+	 * @param word
+	 * @param postag
+	 * @return
+	 * @throws IOException
+	 */
 	private String lemmatize(String word, String postag) throws IOException {
 		if (lemmatizer == null) {
-			InputStream is = getClass().getResourceAsStream("/models/en-lemmatizer.dict");
+			InputStream is = getClass().getResourceAsStream(EN_LEMMATIZER_DICT);
 			lemmatizer = new SimpleLemmatizer(is);
 			is.close();
 		}
