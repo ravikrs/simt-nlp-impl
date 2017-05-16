@@ -16,6 +16,8 @@ public class NlpImplFactory {
 	@Autowired
 	private NLP openNLPImpl;
 
+	private NLP nlp = new OpenNlpImpl();
+
 	/**
 	 * returns an NLP implementation object to be used for performing NLP tasks
 	 * 
@@ -24,7 +26,12 @@ public class NlpImplFactory {
 	 */
 	public NLP getNlpImplementation(String nlpImplName) {
 		if ("openNLP".equalsIgnoreCase(nlpImplName)) {
-			return openNLPImpl;
+			if (openNLPImpl != null) {
+				return openNLPImpl;
+			} else {
+				return nlp;
+			}
+
 		}
 		return null;
 	}

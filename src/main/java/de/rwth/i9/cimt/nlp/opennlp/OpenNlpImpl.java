@@ -16,9 +16,6 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Service;
 
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
@@ -42,39 +39,22 @@ import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.Span;
 
-@PropertySource("classpath:opennlp.properties")
-@Service("openNLPImpl")
-public class OpenNLPImpl implements OpenNLP {
+public class OpenNlpImpl implements OpenNLP {
 
-	private static final Logger log = LoggerFactory.getLogger(OpenNLPImpl.class);
+	private final Logger log = LoggerFactory.getLogger(OpenNLPImplSpring.class);
 
 	// OpenNLP application properties paths to binary files
 	// properties
-	@Value("${opennlp.sentence}")
-	private String openNLPSentence;
-
-	@Value("${opennlp.tokenizer}")
-	private String openNLPTokenizer;
-
-	@Value("${opennlp.pos}")
-	private String openNLPPos;
-
-	@Value("${opennlp.namefinder.format}")
-	private String openNLPNamefinderFormat;
-
-	@Value("${opennlp.parser}")
-	private String openNLPParser;
-
-	@Value("${opennlp.coref.dir}")
-	private String openNLPCorefDir;
-
-	@Value("${opennlp.chunker}")
-	private String openNLPChunker;
-
-	@Value("${opennlp.chunker}")
-	private String openNLPLemmatizer;
+	private static final String MODEL_PATH = "/opennlp/model/en/";
+	private static final String openNLPSentence = MODEL_PATH + "en-sent.bin";
+	private static final String openNLPTokenizer = MODEL_PATH + "en-token.bin";
+	private static final String openNLPPos = MODEL_PATH + "en-pos-maxent.bin";
+	private static final String openNLPNamefinderFormat = MODEL_PATH + "en-ner-%1$s.bin";
+	private static final String openNLPParser = MODEL_PATH + "en-parser-chunking.bin";
+	private static final String openNLPChunker = MODEL_PATH + "en-chunker.bin";
+	private static final String openNLPLemmatizer = MODEL_PATH + "en-lemmatizer.dict";
 	// the named entities
-	private static final String[] NAME_TYPES = { "person", "organization", "location" };
+	private final String[] NAME_TYPES = { "person", "organization", "location" };
 
 	// OpenNLP components, lazily initialized.
 	private SentenceDetector sentenceDetector = null;
@@ -82,7 +62,7 @@ public class OpenNLPImpl implements OpenNLP {
 	private POSTagger posTagger = null;
 	final private Map<String, TokenNameFinder> nameFinderMap = new HashMap<String, TokenNameFinder>();
 	private Parser parser = null;
-	private static SimpleLemmatizer lemmatizer;
+	private SimpleLemmatizer lemmatizer;
 
 	public String[] detectSentences(final File file, final Charset cs) throws IOException {
 		final List<String> lines = FileUtils.readLines(file, cs.toString());
@@ -111,7 +91,7 @@ public class OpenNLPImpl implements OpenNLP {
 			try {
 				// sentence detector
 				// modelIn = new FileInputStream(openNLPSentence);
-				modelIn = getClass().getResourceAsStream(openNLPSentence);
+				modelIn = OpenNlpImpl.class.getResourceAsStream(openNLPSentence);
 				// appService.getOpenNLPSentence() );
 				final SentenceModel sentenceModel = new SentenceModel(modelIn);
 				modelIn.close();
@@ -149,8 +129,8 @@ public class OpenNLPImpl implements OpenNLP {
 				// tokenizer
 				log.info("Loading tokenizer model");
 				// modelIn = new FileInputStream(openNLPTokenizer);
-				modelIn = getClass().getResourceAsStream(openNLPTokenizer);
-				// getClass().getResourceAsStream(
+				modelIn = OpenNlpImpl.class.getResourceAsStream(openNLPTokenizer);
+				// OpenNlpModelManager.class.getResourceAsStream(
 				// appService.getOpenNLPTokenizer() );
 				final TokenizerModel tokenModel = new TokenizerModel(modelIn);
 				modelIn.close();
@@ -178,8 +158,8 @@ public class OpenNLPImpl implements OpenNLP {
 				// tagger
 				log.info("Loading part-of-speech model");
 				// modelIn = new FileInputStream(openNLPPos);
-				modelIn = getClass().getResourceAsStream(openNLPPos);
-				// getClass().getResourceAsStream( appService.getOpenNLPPos() );
+				modelIn = OpenNlpImpl.class.getResourceAsStream(openNLPPos);
+				// OpenNlpModelManager.class.getResourceAsStream( appService.getOpenNLPPos() );
 				final POSModel posModel = new POSModel(modelIn);
 				modelIn.close();
 				posTagger = new POSTaggerME(posModel);
@@ -254,7 +234,7 @@ public class OpenNLPImpl implements OpenNLP {
 			log.info("Loading " + type + " named entity model");
 			// modelIn = new
 			// FileInputStream(String.format(openNLPNamefinderFormat, type));
-			modelIn = getClass().getResourceAsStream(String.format(openNLPNamefinderFormat, type));
+			modelIn = OpenNlpImpl.class.getResourceAsStream(String.format(openNLPNamefinderFormat, type));
 			// String.format(
 			// appService.getOpenNLPNamefinderFormat(), type ) );
 			final TokenNameFinderModel nameFinderModel = new TokenNameFinderModel(modelIn);
@@ -318,7 +298,7 @@ public class OpenNLPImpl implements OpenNLP {
 				// parser
 				log.info("Loading the parser model");
 				// modelIn = new FileInputStream(openNLPParser);
-				modelIn = getClass().getResourceAsStream(openNLPParser);
+				modelIn = OpenNlpImpl.class.getResourceAsStream(openNLPParser);
 				// appService.getOpenNLPParser()
 				// );
 				final ParserModel parseModel = new ParserModel(modelIn);
@@ -340,12 +320,12 @@ public class OpenNLPImpl implements OpenNLP {
 	}
 
 	public Set<String> nounPhraseExtractor(String textContent) {
-		ChunkerME chunker = new ChunkerME(this.getChunkerModel());
+		ChunkerME chunker = new ChunkerME(getChunkerModel());
 		Set<String> result = new HashSet<String>();
 
-		for (String sentence : this.detectSentences(textContent)) {
-			String[] tokens = this.tokenize(sentence);
-			Span[] chunks = chunker.chunkAsSpans(tokens, this.tagPartOfSpeech(tokens));
+		for (String sentence : detectSentences(textContent)) {
+			String[] tokens = tokenize(sentence);
+			Span[] chunks = chunker.chunkAsSpans(tokens, tagPartOfSpeech(tokens));
 
 			// chunkStrings are the actual chunks
 			String[] chunkStrings = Span.spansToStrings(chunks, tokens);
@@ -360,7 +340,7 @@ public class OpenNLPImpl implements OpenNLP {
 		return result;
 	}
 
-	public static List<String> ngram(List<String> input, int n, String separator) {
+	public List<String> ngram(List<String> input, int n, String separator) {
 		if (input.size() <= n) {
 			return input;
 		}
@@ -384,7 +364,7 @@ public class OpenNLPImpl implements OpenNLP {
 		InputStream modelIn = null;
 		try {
 			// modelIn = new FileInputStream(openNLPChunker);
-			modelIn = getClass().getResourceAsStream(openNLPChunker);
+			modelIn = OpenNlpImpl.class.getResourceAsStream(openNLPChunker);
 			model = new ChunkerModel(modelIn);
 		} catch (IOException e) {
 			// Model loading failed, handle the error
@@ -403,7 +383,7 @@ public class OpenNLPImpl implements OpenNLP {
 
 	public String lemmatize(String word, String postag) throws IOException {
 		if (lemmatizer == null) {
-			InputStream is = getClass().getResourceAsStream(openNLPLemmatizer);
+			InputStream is = OpenNlpImpl.class.getResourceAsStream(openNLPLemmatizer);
 			lemmatizer = new SimpleLemmatizer(is);
 			is.close();
 		}

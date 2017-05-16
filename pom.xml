@@ -38,6 +38,12 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<version>1.5.3.RELEASE</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.opennlp</groupId>
 			<artifactId>opennlp-tools</artifactId>
 			<version>${opennlp.version}</version>
@@ -60,7 +66,12 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-
+		<!-- Inflector dependency for plural/singular conversion -->
+		<dependency>
+			<groupId>org.atteo</groupId>
+			<artifactId>evo-inflector</artifactId>
+			<version>1.2.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

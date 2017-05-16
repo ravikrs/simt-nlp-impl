@@ -51,4 +51,14 @@ public interface OpenNLP extends NLP {
 	 * @throws IOException
 	 */
 	public String lemmatize(String word, String postag) throws IOException;
+
+	/**
+	 * returns ngrams from a list of sentence inputs
+	 * 
+	 * @param input
+	 * @param n
+	 * @param separator
+	 * @return
+	 */
+	public List<String> ngram(List<String> input, int n, String separator);
 }
