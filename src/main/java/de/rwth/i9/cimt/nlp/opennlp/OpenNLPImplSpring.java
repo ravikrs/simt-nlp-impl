@@ -360,7 +360,6 @@ public class OpenNLPImplSpring implements OpenNLP {
 		return result;
 	}
 
-	@Override
 	public List<String> ngram(List<String> input, int n, String separator) {
 		if (input.size() <= n) {
 			return input;
