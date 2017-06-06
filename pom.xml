@@ -13,7 +13,6 @@
 		<spring.version>4.3.3.RELEASE</spring.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<spring.maven.version>1.4.1.RELEASE</spring.maven.version>
-
 	</properties>
 	<dependencies>
 		<dependency>

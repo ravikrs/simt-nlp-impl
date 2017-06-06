@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import de.rwth.i9.cimt.nlp.util.StopWordsEn;
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
 import opennlp.tools.lemmatizer.SimpleLemmatizer;
@@ -409,6 +410,33 @@ public class OpenNLPImplSpring implements OpenNLP {
 		}
 		String lemma = lemmatizer.lemmatize(word, postag);
 		return lemma;
+	}
+
+	/**
+	 * returns tokens from textcontent by filtering stopwords and lemmatizing
+	 * 
+	 * @param textContent
+	 * @return
+	 */
+	public Set<String> getTokensFromText(String textContent) {
+		Set<String> tokenSet = new HashSet<String>();
+		for (String sentence : this.detectSentences(textContent)) {
+			String[] tokens = this.tokenize(sentence);
+			String[] posTags = this.tagPartOfSpeech(tokens);
+			for (int i = 0; i < tokens.length; i++) {
+				if (!StopWordsEn.isStopWord(tokens[i])) {
+					String lemma;
+					try {
+						lemma = this.lemmatize(tokens[i], posTags[i]);
+						tokenSet.add(lemma);
+					} catch (IOException e) {
+						log.error(e.getMessage());
+					}
+
+				}
+			}
+		}
+		return tokenSet;
 	}
 
 }
