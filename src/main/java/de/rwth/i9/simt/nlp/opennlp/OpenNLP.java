@@ -1,9 +1,9 @@
-package de.rwth.i9.cimt.nlp.opennlp;
+package de.rwth.i9.simt.nlp.opennlp;
 
 import java.io.IOException;
 import java.util.List;
 
-import de.rwth.i9.cimt.nlp.NLP;
+import de.rwth.i9.simt.nlp.NLP;
 import opennlp.tools.parser.Parse;
 import opennlp.tools.util.Span;
 

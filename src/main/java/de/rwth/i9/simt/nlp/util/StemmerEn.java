@@ -1,4 +1,4 @@
-package de.rwth.i9.cimt.nlp.util;
+package de.rwth.i9.simt.nlp.util;
 
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer.ALGORITHM;

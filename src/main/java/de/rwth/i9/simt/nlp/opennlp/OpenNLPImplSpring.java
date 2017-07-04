@@ -1,4 +1,4 @@
-package de.rwth.i9.cimt.nlp.opennlp;
+package de.rwth.i9.simt.nlp.opennlp;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import de.rwth.i9.cimt.nlp.util.StopWordsEn;
+import de.rwth.i9.simt.nlp.util.StopWordsEn;
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
 import opennlp.tools.lemmatizer.SimpleLemmatizer;

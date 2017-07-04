@@ -1,9 +1,9 @@
-package de.rwth.i9.cimt.nlp.opennlp;
+package de.rwth.i9.simt.nlp.opennlp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import de.rwth.i9.cimt.nlp.NLP;
+import de.rwth.i9.simt.nlp.NLP;
 
 /**
  * factory class which returns nlp implementations such as openNLP, etc.

@@ -1,4 +1,4 @@
-package de.rwth.i9.cimt.nlp.opennlp;
+package de.rwth.i9.simt.nlp.opennlp;
 
 import java.io.File;
 import java.io.IOException;

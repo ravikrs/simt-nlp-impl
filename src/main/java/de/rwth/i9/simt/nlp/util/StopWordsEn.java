@@ -1,4 +1,4 @@
-package de.rwth.i9.cimt.nlp.util;
+package de.rwth.i9.simt.nlp.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
